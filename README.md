@@ -3,6 +3,8 @@ Shows the resolution of the system clock in the notification area. Tested on Win
 
 **Very useful when you are using a laptop to detect if a program is killing your battery!**
 
+**Download binary here:** https://github.com/florentchauveau/ClockResIcon/releases/download/v1.0/ClockResIcon.exe
+
 This blog post inspired me to create this tool: https://randomascii.wordpress.com/2013/07/08/windows-timer-resolution-megawatts-wasted/
 
 Also inspired by ClockRes from sysinternals (https://technet.microsoft.com/en-us/sysinternals/bb897568.aspx).
