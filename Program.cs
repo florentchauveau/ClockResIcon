@@ -35,7 +35,7 @@ namespace ClockResIcon
             Bitmap bitmap = new Bitmap(32, 32);
             Graphics graphics = Graphics.FromImage(bitmap);
 
-            Font font = new Font("Consolas", 16, FontStyle.Bold);
+            Font font = new Font("Consolas", 17, FontStyle.Bold);
             StringFormat format = new StringFormat();
             format.Alignment = StringAlignment.Center;
             SolidBrush fill = new SolidBrush(Color.Black);
