@@ -6,25 +6,49 @@ namespace ClockResIcon
 {
     static class Program
     {
+        private static Timer timer = new Timer();
+        private static int[] timers = new int[] { 1, 10, 30 };
+        private static NotifyIcon nfIcon = new NotifyIcon();
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            NotifyIcon nfIcon = new NotifyIcon();
             nfIcon.Icon = GetIcon();
             nfIcon.Visible = true;
-            nfIcon.MouseClick += delegate { Application.Exit(); };
-            
-            Timer t = new Timer();
-            t.Interval = 10000;
-            t.Tick += delegate { nfIcon.Icon = GetIcon(); };
-            t.Start();
+            nfIcon.ContextMenuStrip = new ContextMenuStrip();
+            foreach (int interval in timers)
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem("Timer: " + interval.ToString() + "s");
+                item.Name = "timer";
+                item.Click += TimerItemClick;
+                item.Tag = interval;
+                nfIcon.ContextMenuStrip.Items.Add(item);
+            }
+            nfIcon.ContextMenuStrip.Items.Add("-");
+            nfIcon.ContextMenuStrip.Items.Add("Exit", null, delegate { Application.Exit(); });
+
+            (nfIcon.ContextMenuStrip.Items[0] as ToolStripMenuItem).PerformClick();
+
+            timer.Tick += delegate { nfIcon.Icon = GetIcon(); };
 
             Application.Run();
 
             nfIcon.Visible = false;
+        }
+
+        private static void TimerItemClick(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            timer.Interval = (int) item.Tag * 1000;
+            foreach (ToolStripItem i in nfIcon.ContextMenuStrip.Items)
+            {
+                if (i.Name == "timer") (i as ToolStripMenuItem).Checked = false;
+            }
+            item.Checked = true;
+            if (!timer.Enabled) timer.Start();
         }
 
         public static Icon GetIcon()
