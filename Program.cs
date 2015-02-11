@@ -22,15 +22,19 @@ namespace ClockResIcon
             (nfIcon.ContextMenuStrip.Items[0] as ToolStripMenuItem).PerformClick();
 
             /* Timer tick: update nfIcon */
-            timer.Tick += delegate {
+            timer.Tick += delegate
+            {
                 try
                 {
+                    /* Destroy the previous Icon Handle to avoid a Handle leak */
+                    WinApiCalls.DestroyIcon(nfIcon.Icon.Handle);
+                    /* Update icon */
                     nfIcon.Icon = GetIcon();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    /* occasionally, there is a GDI+ exception. For now, we ignore it. */
-        }
+                    nfIcon.ShowBalloonTip(5000, "Error", e.ToString(), ToolTipIcon.Error);
+                };
             };
         }
 

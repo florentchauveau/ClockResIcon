@@ -3,6 +3,7 @@
  * Thank you :)
  */
 
+using System;
 using System.Runtime.InteropServices;
 
 
@@ -23,6 +24,9 @@ namespace ClockResIcon
     {
         [DllImport("ntdll.dll", SetLastError = true)]
         private static extern int NtQueryTimerResolution(out uint MinimumResolution, out uint MaximumResolution, out uint ActualResolution);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool DestroyIcon(IntPtr handle);
 
         public static TimerCaps QueryTimerResolution()
         {
