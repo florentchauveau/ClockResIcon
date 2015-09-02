@@ -1,5 +1,5 @@
 # ClockResIcon
-Shows the resolution of the system clock in the notification area. Tested on Windows 8.1, but should work on all NT kernels (Vista, 7, 8, 8.1 and Windows 10 as well).
+Shows the resolution of the system clock in the notification area. Tested on Windows 8.1 and Windows 10, but should work on all NT kernels (Vista, 7, 8, 8.1 and Windows 10).
 
 **Very useful when you are using a laptop to detect if a program is killing your battery!**
 
