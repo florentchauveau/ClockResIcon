@@ -98,23 +98,28 @@ namespace ClockResIcon
             Bitmap bitmap = new Bitmap(32, 32);
             Graphics graphics = Graphics.FromImage(bitmap);
 
-            Font font = new Font("Consolas", 17, FontStyle.Bold);
+            Font font = new Font("Segoe UI", 18, FontStyle.Regular);
             StringFormat format = new StringFormat();
             format.Alignment = StringAlignment.Center;
             SolidBrush fill = new SolidBrush(Color.Black);
+
             if (number < 5)
             {
                 fill.Color = Color.Red;
-            } else if (number < 10)
+                font = new Font("Segoe UI", 18, FontStyle.Bold);
+            }
+            else if (number < 10)
             {
                 fill.Color = Color.DarkOrange;
-            } else if (number < 15)
+                font = new Font("Segoe UI", 18, FontStyle.Bold);
+            }
+            else if (number < 15)
             {
                 fill.Color = Color.Orange;
             }
 
             graphics.FillRectangle(fill, 0, 0, bitmap.Height, bitmap.Width);
-            graphics.DrawString(number.ToString(), font, new SolidBrush(Color.White), 16, 2, format);
+            graphics.DrawString(number.ToString(), font, new SolidBrush(Color.White), 16, -2, format);
             Icon createdIcon = Icon.FromHandle(bitmap.GetHicon());
 
             /* Purge */
