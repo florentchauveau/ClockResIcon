@@ -15,8 +15,11 @@ namespace ClockResIcon
 
         public Program()
         {
+            int resolution = GetTimerResolution();
+            int lastTimerResolution = resolution;
+
             nfIcon.ContextMenuStrip = CreateContextMenu();
-            nfIcon.Icon = GetIcon();
+            nfIcon.Icon = GetIcon(resolution);
             nfIcon.Visible = true;
             /* Invoke a 'click' on the first item of the context menu */
             (nfIcon.ContextMenuStrip.Items[0] as ToolStripMenuItem).PerformClick();
@@ -26,10 +29,18 @@ namespace ClockResIcon
             {
                 try
                 {
-                    /* Destroy the previous Icon Handle to avoid a Handle leak */
-                    WinApiCalls.DestroyIcon(nfIcon.Icon.Handle);
-                    /* Update icon */
-                    nfIcon.Icon = GetIcon();
+                    resolution = GetTimerResolution();
+
+                    /* Update icon on timer change */
+                    if (resolution != lastTimerResolution)
+                    {
+                        /* Destroy the previous Icon Handle to avoid a Handle leak */
+                        WinApiCalls.DestroyIcon(nfIcon.Icon.Handle);
+                        /* Update icon */
+                        nfIcon.Icon = GetIcon(resolution);
+                        /* Save last timer */
+                        lastTimerResolution = resolution;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -88,12 +99,15 @@ namespace ClockResIcon
             if (!timer.Enabled) timer.Start();
         }
 
-        public Icon GetIcon()
+        private int GetTimerResolution()
         {
             /* Query the timer resolution from Windows API */
             TimerCaps caps = WinApiCalls.QueryTimerResolution();
-            int number = (int)(caps.PeriodCurrent / 10000.0);
+            return (int)(caps.PeriodCurrent / 10000.0);
+        }
 
+        private Icon GetIcon(int resolution)
+        {
             /* Icon creation */
             Bitmap bitmap = new Bitmap(32, 32);
             Graphics graphics = Graphics.FromImage(bitmap);
@@ -103,23 +117,23 @@ namespace ClockResIcon
             format.Alignment = StringAlignment.Center;
             SolidBrush fill = new SolidBrush(Color.Black);
 
-            if (number < 5)
+            if (resolution < 5)
             {
                 fill.Color = Color.Red;
                 font = new Font("Segoe UI", 18, FontStyle.Bold);
             }
-            else if (number < 10)
+            else if (resolution < 10)
             {
                 fill.Color = Color.DarkOrange;
                 font = new Font("Segoe UI", 18, FontStyle.Bold);
             }
-            else if (number < 15)
+            else if (resolution < 15)
             {
                 fill.Color = Color.Orange;
             }
 
             graphics.FillRectangle(fill, 0, 0, bitmap.Height, bitmap.Width);
-            graphics.DrawString(number.ToString(), font, new SolidBrush(Color.White), 16, -2, format);
+            graphics.DrawString(resolution.ToString(), font, new SolidBrush(Color.White), 16, -2, format);
             Icon createdIcon = Icon.FromHandle(bitmap.GetHicon());
 
             /* Purge */
